@@ -19,4 +19,20 @@
 """
 
 if __name__ == '__main__':
+    case = int(input())
+    each_floor = dict()
+    each_floor[0] = dict()
+    each_floor[0][0], each_floor[0][1], each_floor[0][2] = 1, 1, 1
 
+    each_floor_sum = dict()
+    each_floor_sum[1] = sum(each_floor[0].values())
+    for i in range(1, case + 1):
+        each_floor[i] = dict()
+        each_floor[i][0] = (each_floor[i - 1][0] + each_floor[i - 1][1] + each_floor[i - 1][2]) % 9901
+        each_floor[i][1] = (each_floor[i - 1][0] + each_floor[i - 1][2]) % 9901
+        each_floor[i][2] = (each_floor[i - 1][0] + each_floor[i - 1][1]) % 9901
+        # data1 = each_floor_sum[i - 1]
+        # data2 = sum(each_floor[i].values())
+        # each_floor_sum[i] = data1 + data2
+        # print(each_floor_sum, each_floor[i])
+    print(each_floor[case][0])
