@@ -31,16 +31,26 @@ def make_near_list(matrix):
 
 
 def depth_first_search(matrix_list, v):
-
     result = []
-    visited = False
+    visited = dict()
+    visited[v] = True
     result.append(v)
+    matrix_list[v] = sorted(matrix_list[v])
+    while True:
+        if len(matrix_list[v]) == 0:
+            break
 
-    while matrix_list is not None:
-        next_val = min(matrix_list[v])
-        matrix_list[next_val]
-    print(min(matrix_list[v]))
-    print(matrix_list, v)
+        a = matrix_list[v].pop(0)
+        result.append(a)
+        visited[a] = True
+
+
+        b = matrix_list[a].pop(0)
+        result.append(b)
+
+    print(result)
+
+
 
 if __name__ == '__main__':
     data = """4 5 1
