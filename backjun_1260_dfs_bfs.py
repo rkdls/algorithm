@@ -19,7 +19,7 @@
 1 2 3 4"""
 
 
-def make_near_list(matrix):
+def make_adj_list(matrix):
     m = dict()
     for i, val in enumerate(matrix):
         row, col = val.split()
@@ -30,38 +30,81 @@ def make_near_list(matrix):
     return m
 
 
-def depth_first_search(matrix_list, v):
-    result = []
-    visited = dict()
-    visited[v] = True
-    result.append(v)
-    matrix_list[v] = sorted(matrix_list[v])
-    while True:
-        if len(matrix_list[v]) == 0:
-            break
-
-        a = matrix_list[v].pop(0)
-        result.append(a)
-        visited[a] = True
+def make_adj_matrix(number):
+    m = []
+    number = int(number)
+    for i in range(number):
+        m.append(i)
+        m[i] = []
+        for j in range(number):
+            m[i].append(0)
+    return m
 
 
-        b = matrix_list[a].pop(0)
-        result.append(b)
+def fill_adj_matrix(adj_matrix, param):
+    for i, val in enumerate(param):
+        row, col = val.split(' ')
+        row, col = int(row), int(col)
+        adj_matrix[row - 1][col - 1] = 1
+        # adj_matrix[col - 1][row - 1] = 1
+    return adj_matrix
 
-    print(result)
 
+def depth_first_search(matrix_list, visit, v, N, dfs_result):
+    visit[v - 1] = 1
+    dfs_result.append(str(v))
+    for i in range(N):
+        if matrix_list[v - 1][i] == 1 and visit[i] != 1:
+            # print(v, "에서 ", i + 1, "로 이동")
+            depth_first_search(matrix_list, visit, i + 1, N, dfs_result)
+
+
+def breadth_first_search(matrix_list, visit, v, N, bfs_result):
+    q = [0 for _ in range(N)]
+    visit[v - 1] = True
+    q.append(v)
+    bfs_result.append(str(v))
+    while len(q) != 0:
+        v = q.pop(0)
+        for i in range(N):
+            if matrix_list[v - 1][i] == 1 and visit[i] == False:
+                visit[i] = True
+                # print("{} 에서 {}로 이동".format(v, i + 1))
+                bfs_result.append(str(i + 1))
+                q.append(i + 1)
+                # print(q)
+                # print(bfs_result)
 
 
 if __name__ == '__main__':
-    data = """4 5 1
-1 2
-1 3
-1 4
-2 4
-3 4"""
+    #     data = """4 5 1
+    # 1 2
+    # 1 3
+    # 1 4
+    # 2 4
+    # 3 4"""
+    #     data = input()
 
-    data = data.splitlines()
-    case = data[0]
+    # data = data.splitlines()
+    # case = data[0]
+    case = input()
     N, M, v = case.split(' ')
-    matrix_list = make_near_list(data[1:])
-    depth_first_search(matrix_list, int(v))
+    # matrix_list = make_adj_list(data[1:])
+    data = []
+    N, M, v = int(N), int(M), int(v)
+    for i in range(M):
+        point = input()
+        data.append(point)
+
+    adj_matrix = make_adj_matrix(N)
+    filled = fill_adj_matrix(adj_matrix, data)
+    visit = [0 for x in range(N)]
+    dfs_result = []
+    depth_first_search(filled, visit, v, N, dfs_result)
+    # print(dfs_result)
+    bfs_result = []
+    visit = [0 for x in range(N)]
+    breadth_first_search(filled, visit, v, N, bfs_result)
+
+    print(" ".join(dfs_result))
+    print(" ".join(bfs_result))
