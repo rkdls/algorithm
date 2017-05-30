@@ -50,21 +50,14 @@ def fill_adj_matrix(adj_matrix, param):
     return adj_matrix
 
 
-def depth_first_search(matrix_list, visit, v, N, dfs_result):
-    visit[v - 1] = 1
-    dfs_result.append(str(v))
+def depth_first_search_stack(matrix_list, v, N, visitied, dfs_result):
+    dfs_result.append(v)
+    visitied[v - 1] = True
     for i in range(N):
-        if matrix_list[v - 1][i] == 1 and visit[i] != 1:
-            # print(v, "에서 ", i + 1, "로 이동")
-            depth_first_search(matrix_list, visit, i + 1, N, dfs_result)
-
-def depth_first_search_stack(matrix_list, visit, v, N, dfs_result):
-    visit[v - 1] = 1
-    dfs_result.append(str(v))
-    for i in range(N):
-        if matrix_list[v - 1][i] == 1 and visit[i] != 1:
-            # print(v, "에서 ", i + 1, "로 이동")
-            depth_first_search(matrix_list, visit, i + 1, N, dfs_result)
+        if matrix_list[v-1][i] == 1 and visitied[i] == False:
+            print("{} 에서 {} 로 이동".format(v, i+1))
+            depth_first_search_stack(matrix_list, i+1, N, visitied, dfs_result)
+    print(dfs_result)
 
 
 def breadth_first_search(matrix_list, visit, v, N, bfs_result):
@@ -85,34 +78,24 @@ def breadth_first_search(matrix_list, visit, v, N, bfs_result):
 
 
 if __name__ == '__main__':
-    #     data = """4 5 1
-    # 1 2
-    # 1 3
-    # 1 4
-    # 2 4
-    # 3 4"""
-    #     data = input()
-
-    # data = data.splitlines()
-    # case = data[0]
-    case = input()
+    data = """4 5 1
+1 2
+1 3
+1 4
+2 4
+3 4"""
+    data = data.splitlines()
+    case = data[0]
+    matrix_list = make_adj_list(data[1:])
     N, M, v = case.split(' ')
-    # matrix_list = make_adj_list(data[1:])
-    data = []
     N, M, v = int(N), int(M), int(v)
-    for i in range(M):
-        point = input()
-        data.append(point)
 
     adj_matrix = make_adj_matrix(N)
-    filled = fill_adj_matrix(adj_matrix, data)
-    visit = [0 for x in range(N)]
+    filled = fill_adj_matrix(adj_matrix, data[1:])
     dfs_result = []
-    depth_first_search(filled, visit, v, N, dfs_result)
+
+    visited = [False for _ in range(N)]
+    depth_first_search_stack(filled, v, N, visited, dfs_result)
     # print(dfs_result)
     bfs_result = []
     visit = [0 for x in range(N)]
-    breadth_first_search(filled, visit, v, N, bfs_result)
-
-    print(" ".join(dfs_result))
-    print(" ".join(bfs_result))
