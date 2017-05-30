@@ -46,7 +46,7 @@ def fill_adj_matrix(adj_matrix, param):
         row, col = val.split(' ')
         row, col = int(row), int(col)
         adj_matrix[row - 1][col - 1] = 1
-        # adj_matrix[col - 1][row - 1] = 1
+        adj_matrix[col - 1][row - 1] = 1
     return adj_matrix
 
 
@@ -54,36 +54,39 @@ def depth_first_search_stack(matrix_list, v, N, visitied, dfs_result):
     dfs_result.append(v)
     visitied[v - 1] = True
     for i in range(N):
-        if matrix_list[v-1][i] == 1 and visitied[i] == False:
-            print("{} 에서 {} 로 이동".format(v, i+1))
-            depth_first_search_stack(matrix_list, i+1, N, visitied, dfs_result)
+        if matrix_list[v - 1][i] == 1 and visitied[i] == False:
+            print("{} 에서 {} 로 이동".format(v, i + 1))
+            depth_first_search_stack(matrix_list, i + 1, N, visitied, dfs_result)
     print(dfs_result)
 
 
-def breadth_first_search(matrix_list, visit, v, N, bfs_result):
-    q = [0 for _ in range(N)]
-    visit[v - 1] = True
-    q.append(v)
-    bfs_result.append(str(v))
-    while len(q) != 0:
-        v = q.pop(0)
+def breadth_first_search(matrix_list, visited, v, N, bfs_result):
+    for i, val in enumerate(matrix_list):
+        print(val)
+    visited[v-1] = True
+    bfs_result.append(v)
+
+    while True:
         for i in range(N):
-            if matrix_list[v - 1][i] == 1 and visit[i] == False:
-                visit[i] = True
-                # print("{} 에서 {}로 이동".format(v, i + 1))
-                bfs_result.append(str(i + 1))
-                q.append(i + 1)
-                # print(q)
-                # print(bfs_result)
+            if visited[i] is not True and matrix_list[v - 1][i] == 1:
+                visited[i] = True
+                print("{} 에서 {}로 이동".format(v,i+1))
+                bfs_result.append(i+1)
+        if v >= N:
+            break
+        v = v + 1
+    print(visited)
+    print(bfs_result)
 
 
 if __name__ == '__main__':
-    data = """4 5 1
+    data = """7 5 1
 1 2
 1 3
 1 4
 2 4
-3 4"""
+3 4
+3 5"""
     data = data.splitlines()
     case = data[0]
     matrix_list = make_adj_list(data[1:])
@@ -94,8 +97,9 @@ if __name__ == '__main__':
     filled = fill_adj_matrix(adj_matrix, data[1:])
     dfs_result = []
 
-    visited = [False for _ in range(N)]
-    depth_first_search_stack(filled, v, N, visited, dfs_result)
+    # visited = [False for _ in range(N)]
+    # depth_first_search_stack(filled, v, N, visited, dfs_result)
     # print(dfs_result)
     bfs_result = []
-    visit = [0 for x in range(N)]
+    visited = [False for x in range(N + 1)]
+    breadth_first_search(filled, visited, v, N, dfs_result)
